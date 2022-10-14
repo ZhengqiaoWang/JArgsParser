@@ -1,46 +1,47 @@
 # JArgsParser
 
-[[中文]](README_zhCN.md)
+`JArgsParser`是一个只有一个头文件的C++11参数解析库。我们可以将头文件引入便可快速地使用。
 
-`JArgsParser` is a `head-only` arguments parser for `C++11`. You can use it easily by including `interface/jargs_parser_api.hpp` to your project.
+目前它支持4种类型的参数：
 
-`JArgsParser` support multi kinds of arguments:
+- 位置参数: `./JArgsParser a 2 ./src`
+- 标志参数: `./JArgsParser -d`
+- 值参数: `./JArgsParser -e 123 -fi 3.14`
+- 动作参数: `./JargsParser -g`，与程序内定义的函数绑定，当用于填写动作参数时会优先触发函数
 
-- position argument: `./JArgsParser a 2 ./src`
-- flag argument: `./JArgsParser -d`
-- value argument: `./JArgsParser -e 123 -fi 3.14`
-- action argument: `./JargsParser -g`
+与此同时，还带有默认的标志参数：
 
-Here's the example:
+- `-h|--help`: 帮助
+- `-v|--version`: 版本
+
+下面是效果示例：
 
 ![example](assets/show.gif)
 
-## QuickStart
+## 如何开始
 
-Download the latest release and put it into your project.
+下载最新的发布版本（interface/jargs_parser_api.hpp）然后放到你的项目目录里。我们可以参考`src/main.cpp`来学习使用这个库。
 
-See also in `src/main.cpp`
-
-Include `JArgsParser`:
+在项目代码中`include`一下`JArgsParser`:
 
 ```c++
 #include "jargs_parser_api.hpp"
 using namespace Joger::ArgsParser;
 ```
 
-Than, we can use `JArgsParser` to require:
+然后我们手动设置一下都要收到什么参数：
 
-| key | type         | value type    | required |
+| 参数主键key | 参数类型type         | 收到的参数类型value type    | 是否强制要求required |
 | --- | ------------ | ------------- | -------- |
-| a   | position arg | int           | true     |
-| b   | position arg | float         | true     |
-| c   | position arg | string        | true     |
-| d   | flag arg     | bool          | false    |
-| e   | value arg    | int           | true     |
-| f   | value arg    | float         | false    |
-| g   | action arg   | none          | false    |
-| i   | value arg    | vec\<float\>  | true     |
-| j   | value arg    | vec\<string\> | true     |
+| a   | 位置参数position arg | int           | true     |
+| b   | 位置参数position arg | float         | true     |
+| c   | 位置参数position arg | string        | true     |
+| d   | 标志参数flag arg     | bool          | false    |
+| e   | 值参数value arg    | int           | true     |
+| f   | 值参数value arg    | float         | false    |
+| g   | 动作参数action arg   | none          | false    |
+| i   | 值参数value arg    | vec\<float\>  | true     |
+| j   | 值参数value arg    | vec\<string\> | true     |
 
 ```c++
     JArgsParser arg_parser(argc, argv, "Program ABC, for testing JArgsParser", "Here's the place for copyright", "V1.0.0");
@@ -62,7 +63,7 @@ Than, we can use `JArgsParser` to require:
     arg_parser.setArgument({"j", "-j", "--j", ArgsValType::LIST_STRING, "this is a LIST_STRING value arg"});
 ```
 
-Than we `parseArgs` and get them.(MACRO `GET_ARGS*` is defined in `src/main.cpp`)
+然后我们可以使用 `parseArgs`拿到想要的参数（通过参数主键）。下面的示例摘自`src/main.cpp`，`GET_ARGS*`开头的宏也在那里定义，不是在库里哟~
 
 ```c++
     if (false == arg_parser.parseArgs())
@@ -87,8 +88,3 @@ Than we `parseArgs` and get them.(MACRO `GET_ARGS*` is defined in `src/main.cpp`
 
     GET_ARGS_VEC_STR("j", std::string, "%s");
 ```
-
-## TODO
-
-- [ ] UT
-- [ ] DOCS
