@@ -1,5 +1,5 @@
 #include "jargs_parser_api.hpp"
-using namespace Joger;
+using namespace Joger::ArgsParser;
 
 #define GET_ARGS(KEY, TYPE, FMT)                       \
     {                                                  \
