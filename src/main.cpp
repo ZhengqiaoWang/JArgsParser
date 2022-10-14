@@ -57,7 +57,7 @@ using namespace Joger;
 
 int main(int argc, char const *argv[])
 {
-    JArgsParser arg_parser(argc, argv, "描述", "版权", "V1.0.0");
+    JArgsParser arg_parser(argc, argv, "Program ABC, for testing JArgsParser", "Here's the place for copyright", "V1.0.0");
     arg_parser.setArgument({"a", ArgsValType::INT, "this is a float position arg"});
     arg_parser.setArgument({"b", ArgsValType::FLOAT, "this is a float position arg"});
     arg_parser.setArgument({"c", ArgsValType::STRING, "this is a STRING position arg"});
@@ -92,7 +92,6 @@ int main(int argc, char const *argv[])
     GET_ARGS("e", int, "%d");
     GET_ARGS("f", float, "%f");
 
-    // std::vector<float> i_vec;
     GET_ARGS_VEC("i", float, "%f");
     GET_ARGS_VEC("i", double, "%f");
 
