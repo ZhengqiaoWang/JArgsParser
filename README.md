@@ -23,7 +23,7 @@ Include `JArgsParser`:
 
 ```c++
 #include "jargs_parser_api.hpp"
-using namespace Joger;
+using namespace Joger::ArgsParser;
 ```
 
 Than, we can use `JArgsParser` to require:
