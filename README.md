@@ -88,6 +88,14 @@ Than we `parseArgs` and get them.(MACRO `GET_ARGS*` is defined in `src/main.cpp`
     GET_ARGS_VEC_STR("j", std::string, "%s");
 ```
 
+## Stargazers
+
+[![Stargazers repo roster for @ZhengqiaoWang/JArgsParser](https://reporoster.com/stars/ZhengqiaoWang/JArgsParser)](https://github.com/ZhengqiaoWang/JArgsParser/stargazers)
+
+## Forkers
+
+[![Forkers repo roster for @ZhengqiaoWang/JArgsParser](https://reporoster.com/forks/ZhengqiaoWang/JArgsParser)](https://github.com/ZhengqiaoWang/JArgsParser/network/members)
+
 ## TODO
 
 - [ ] UT
