@@ -1,6 +1,6 @@
 # JArgsParser
 
-`JArgsParser` is an `head-only` arguments parser for `C++11`. You can use it easily by including `interface/jargs_parser_api.hpp` to your project.
+`JArgsParser` is a `head-only` arguments parser for `C++11`. You can use it easily by including `interface/jargs_parser_api.hpp` to your project.
 
 `JArgsParser` support multi kinds of arguments:
 
