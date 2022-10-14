@@ -31,7 +31,6 @@ using namespace Joger;
             printf("parse failed\n");                \
             return -1;                               \
         }                                            \
-        printf("size: %ld\n", b.size());             \
         printf("(" #TYPE ") " #KEY ": ");            \
         for (auto &item : b)                         \
         {                                            \
@@ -48,7 +47,6 @@ using namespace Joger;
             printf("parse failed\n");                \
             return -1;                               \
         }                                            \
-        printf("size: %ld\n", b.size());             \
         printf("(" #TYPE ") " #KEY ": ");            \
         for (auto &item : b)                         \
         {                                            \
