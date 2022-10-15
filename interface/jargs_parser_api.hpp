@@ -132,8 +132,7 @@ namespace Joger
                 {
                 case ArgsType::POSITION:
                 {
-                    m_key_func[key] = std::bind(&JArgsParser::posArgParser, this, key, m_cur_pos, args_desc);
-                    ++m_cur_pos;
+                    m_key_func[key] = std::bind(&JArgsParser::posArgParser, this, key, args_desc);
                     break;
                 }
                 case ArgsType::FLAG:
@@ -189,6 +188,19 @@ namespace Joger
                     }
                 }
 
+                // unknown args:
+                if (!m_argv_vec.empty())
+                {
+                    printf("ERROR: unknown arguments: ");
+                    for(auto&item:m_argv_vec)
+                    {
+                        printf("%s ",item.c_str());
+                    }
+                    printf("\n");
+                    showHelp();
+                    return false;
+                }
+
                 return true;
             }
 
@@ -242,33 +254,35 @@ namespace Joger
             }
 
         private:
-            bool posArgParser(const std::string &key, unsigned int pos, const ArgsDesc &args_desc)
+            bool posArgParser(const std::string &key, const ArgsDesc &args_desc)
             {
-                if (false == pos < m_argv_vec.size())
+                if (m_argv_vec.size() == 0)
                 {
                     return false;
                 }
-                if (false == typeCheck(args_desc.arg_val_type, m_argv_vec[pos]))
+                if (false == typeCheck(args_desc.arg_val_type, m_argv_vec[0]))
                 {
                     showErrorMsg(key, args_desc, "type check failed");
                     return false;
                 }
                 m_key_val[key].clear();
-                m_key_val[key].emplace_back(std::move(m_argv_vec[pos]));
+                m_key_val[key].emplace_back(std::move(m_argv_vec[0]));
 
+                m_argv_vec.erase(m_argv_vec.begin());
                 return true;
             }
+
             bool flagArgParser(const std::string &key, const ArgsDesc &args_desc)
             {
                 m_key_val[key].clear();
                 m_key_val[key].emplace_back("F");
-                bool get_value{false};
-                for (auto &item : m_argv_vec)
+                for (auto iter = m_argv_vec.begin(); iter != m_argv_vec.end(); ++iter)
                 {
+                    auto &item = *iter;
                     if (item == args_desc.short_name || item == args_desc.full_name)
                     {
                         m_key_val[key][0] = "T";
-                        get_value = true;
+                        m_argv_vec.erase(iter);
                         break;
                     }
                 }
@@ -278,7 +292,7 @@ namespace Joger
             {
                 m_key_val[key].clear();
                 bool get_value{false};
-                for (auto iter = m_argv_vec.cbegin(); iter != m_argv_vec.cend(); ++iter)
+                for (auto iter = m_argv_vec.begin(); iter != m_argv_vec.end(); ++iter)
                 {
                     if ((*iter) == args_desc.short_name || (*iter) == args_desc.full_name)
                     {
@@ -303,7 +317,9 @@ namespace Joger
                         {
                             m_key_val[key].emplace_back(*iter);
                         }
-
+                        auto key_iter = iter - 1;
+                        m_argv_vec.erase(iter);
+                        m_argv_vec.erase(key_iter);
                         get_value = true;
                         break;
                     }
@@ -317,11 +333,13 @@ namespace Joger
             }
             bool actArgParser(const std::string &key, const ArgsDesc &args_desc)
             {
-                for (auto &item : m_argv_vec)
+                for (auto iter = m_argv_vec.begin(); iter != m_argv_vec.end(); ++iter)
                 {
+                    auto &item = *iter;
                     if (item == args_desc.short_name || item == args_desc.full_name)
                     {
                         args_desc.action(item);
+                        m_argv_vec.erase(iter);
                         break;
                     }
                 }
@@ -430,8 +448,7 @@ namespace Joger
             std::vector<std::string> m_argv_vec; ///< 参数存放
 
             std::map<ArgsType, std::map<std::string, ArgsDesc>, std::less<ArgsType>> m_arg_map;
-            unsigned int m_cur_pos{0};
-            std::unordered_map<std::string, std::function<bool(void)>> m_key_func;
+            std::map<std::string, std::function<bool(void)>> m_key_func;
             std::unordered_map<std::string, std::vector<std::string>> m_key_val;
 
         private:
