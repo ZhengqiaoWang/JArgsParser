@@ -16,11 +16,34 @@
 
 下面是效果示例：
 
-![example](assets/show.gif)
+**位置参数**
+
+![position_args](assets/position_args.png)
+
+**参数类型检查**
+
+![type check](assets/type_check.png)
+
+**默认帮助**
+
+![default help](assets/default_help.png)
+
+**默认版本**
+
+![default version](assets/default_version.png)
+
+**用户触发帮助**
+
+![call help](assets/call_help.png)
+
+**支持数组输入**
+
+![array input](assets/allow_array_input.png)
+
 
 ## 如何开始
 
-下载最新的发布版本（interface/jargs_parser_api.hpp）然后放到你的项目目录里。我们可以参考`src/main.cpp`来学习使用这个库。
+下载最新的发布版本（interface/jargs_parser_api.hpp）然后放到你的项目目录里。我们可以参考`example/helloworld.cpp`来学习使用这个库。
 
 在项目代码中`include`一下`JArgsParser`:
 
@@ -31,60 +54,74 @@ using namespace Joger::ArgsParser;
 
 然后我们手动设置一下都要收到什么参数：
 
-| 参数主键key | 参数类型type         | 收到的参数类型value type    | 是否强制要求required |
+| key | type         | value type    | required |
 | --- | ------------ | ------------- | -------- |
-| a   | 位置参数position arg | int           | true     |
-| b   | 位置参数position arg | float         | true     |
-| c   | 位置参数position arg | string        | true     |
-| d   | 标志参数flag arg     | bool          | false    |
-| e   | 值参数value arg    | int           | true     |
-| f   | 值参数value arg    | float         | false    |
-| g   | 动作参数action arg   | none          | false    |
-| i   | 值参数value arg    | vec\<float\>  | true     |
-| j   | 值参数value arg    | vec\<string\> | true     |
+| arg1   | position arg | int           | true     |
+| arg2   | flag arg | bool         | false     |
+| arg3   | value arg | vec\<string\>        | false     |
+| arg4   | action arg     | action          | false    |
 
 ```c++
-    JArgsParser arg_parser(argc, argv, "Program ABC, for testing JArgsParser", "Here's the place for copyright", "V1.0.0");
-    arg_parser.setArgument({"a", ArgsValType::INT, "this is a float position arg"});
-    arg_parser.setArgument({"b", ArgsValType::FLOAT, "this is a float position arg"});
-    arg_parser.setArgument({"c", ArgsValType::STRING, "this is a STRING position arg"});
-
-    arg_parser.setArgument({"d", "-d", "--di", "this is a flag arg"});
-
-    arg_parser.setArgument({"e", "-e", "--ei", ArgsValType::INT, "this is a value arg"});
-    arg_parser.setArgument({"f", "-f", "--fi", ArgsValType::FLOAT, "this is a value arg", false});
-
-    arg_parser.setArgument({"g", "-g", "--g", [](const std::string &key)
-                            { printf("action g!\n"); },
-                            "this is a ACTION arg"});
-
-    arg_parser.setArgument({"i", "-i", "--iabcdefg", ArgsValType::LIST_FLOAT, "this is a LIST_FLOAT value arg"});
-
-    arg_parser.setArgument({"j", "-j", "--j", ArgsValType::LIST_STRING, "this is a LIST_STRING value arg"});
+JArgsParser arg_parser(argc, argv, "Hello, this is JArgsParser", "https://github.com/ZhengqiaoWang/JArgsParser", "V0.0.2");
+arg_parser.setArgument({"arg1", ArgsValType::FLOAT, "This is a position arg"});
+arg_parser.setArgument({"arg2", "-b", "--bbb", "This is a flag"});
+arg_parser.setArgument({"arg3", "-c", "--ccc", ArgsValType::LIST_STRING, "This is a value arg", false});
+arg_parser.setArgument({"arg4", "-d", "--ddd", []()
+                        { printf("** yoho! You call the ddd! **\n"); },
+                        "This is an action flag"});
 ```
 
-然后我们可以使用 `parseArgs`拿到想要的参数（通过参数主键）。下面的示例摘自`src/main.cpp`，`GET_ARGS*`开头的宏也在那里定义，不是在库里哟~
+然后我们就可以解析出结果：
 
 ```c++
-    if (false == arg_parser.parseArgs())
+if (false == arg_parser.parseArgs())
+{
+    printf("failed to parse\n");
+    return -1;
+}
+
+{
+    // arg 1
+    double var_arg1{0};
+    if (false == arg_parser.getArgument("arg1", var_arg1))
     {
-        printf("parse failed\n");
+        printf("failed to get arg\n");
         return -1;
     }
-    GET_ARGS("a", int, "%d");
-    GET_ARGS("a", long, "%d");
-    GET_ARGS("a", unsigned int, "%d");
-    GET_ARGS("a", unsigned long, "%d");
-    GET_ARGS("b", int, "%d");
-    GET_ARGS("b", float, "%f");
-    GET_ARGS("b", double, "%f");
-    GET_ARGS_STR("c", std::string, "%s");
-    GET_ARGS("d", bool, "%d");
-    GET_ARGS("e", int, "%d");
-    GET_ARGS("f", float, "%f");
+    printf("I got arg1: %f\n", var_arg1);
+}
 
-    GET_ARGS_VEC("i", float, "%f");
-    GET_ARGS_VEC("i", double, "%f");
+{
+    // arg 2
+    bool var_arg2{false};
+    if (false == arg_parser.getArgument("arg2", var_arg2))
+    {
+        printf("I didn't got arg2\n");
+    }
+    printf("I got arg2: %s\n", var_arg2 ? "True" : "False");
+}
 
-    GET_ARGS_VEC_STR("j", std::string, "%s");
+{
+    // arg 3
+    std::vector<std::string> var_arg3;
+    if (false == arg_parser.getArgument("arg3", var_arg3))
+    {
+        printf("I didn't got arg3\n");
+    }
+    else
+    {
+        printf("I got arg3: ");
+        for (auto &arg : var_arg3)
+        {
+            printf("%s ",arg.c_str());
+        }
+        printf("\n");
+    }
+}
 ```
+
+恭喜，你现在可以使用 `JArgsParser` 了!
+
+## 使用进阶
+
+目前文档我还没写，所以如果你等不急的话，可以参考`example/show_all.cpp`或者`ut/main.cpp`中的写法。我认为基本上把我设计到的场景都覆盖到了。
