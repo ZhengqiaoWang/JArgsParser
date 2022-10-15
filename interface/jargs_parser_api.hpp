@@ -74,7 +74,7 @@ namespace Joger
             ArgsDesc(const std::string &key,
                      const std::string &short_name,
                      const std::string &full_name,
-                     const std::function<void(const std::string &)> &action,
+                     const std::function<void(void)> &action,
                      const std::string description) : key(key),
                                                       short_name(short_name),
                                                       full_name(full_name),
@@ -97,7 +97,7 @@ namespace Joger
             ArgsValType arg_val_type;
             std::string short_name, full_name, description;
             bool required{false};
-            std::function<void(const std::string &)> action;
+            std::function<void(void)> action;
             int arg_width{0};
         };
 
@@ -165,8 +165,18 @@ namespace Joger
             {
                 if (m_argc <= 1)
                 {
-                    showHelp();
-                    exit(0);
+                    for (auto &arg : m_arg_map)
+                    {
+                        for (auto &arg_desc_iter : arg.second)
+                        {
+                            if (arg_desc_iter.second.required)
+                            {
+                                showHelp();
+                                return false;
+                            }
+                        }
+                    }
+                    return true;
                 }
                 if (m_argv_vec[0] == "-h" || m_argv_vec[0] == "--help")
                 {
@@ -241,12 +251,12 @@ namespace Joger
                 {
                     for (auto arg : iter.second)
                     {
-                        printf("  %-*s: [%11s|%s]: %s\n",
-                               m_arg_max_length + 4,
+                        printf("  %-*s: %s {%s|%s}\n",
+                               m_arg_max_length + 2,
                                arg.second.required ? arg.second.arg_type == ArgsType::POSITION ? arg.first.c_str() : (arg.second.short_name + "|" + arg.second.full_name).c_str() : (arg.second.short_name + "|" + arg.second.full_name).c_str(),
-                               getArgsValTypeString(arg.second.arg_val_type).c_str(),
-                               arg.second.required ? "REQ" : "OPT",
-                               arg.second.description.c_str());
+                               arg.second.description.c_str(),
+                               arg.second.required ? "req" : "opt",
+                               getArgsValTypeString(arg.second.arg_val_type).c_str());
                     }
                 }
                 printf("%s\n", m_copyright.c_str());
@@ -338,7 +348,7 @@ namespace Joger
                     auto &item = *iter;
                     if (item == args_desc.short_name || item == args_desc.full_name)
                     {
-                        args_desc.action(item);
+                        args_desc.action();
                         m_argv_vec.erase(iter);
                         break;
                     }
@@ -410,31 +420,31 @@ namespace Joger
                 {
                 case ArgsValType::INT:
                 {
-                    return "INT";
+                    return "int";
                 }
                 case ArgsValType::FLOAT:
                 {
-                    return "FLOAT";
+                    return "float";
                 }
                 case ArgsValType::STRING:
                 {
-                    return "STRING";
+                    return "string";
                 }
                 case ArgsValType::LIST_INT:
                 {
-                    return "LIST_INT";
+                    return "vec<int>";
                 }
                 case ArgsValType::LIST_FLOAT:
                 {
-                    return "LIST_FLOAT";
+                    return "vec<float>";
                 }
                 case ArgsValType::LIST_STRING:
                 {
-                    return "LIST_STRING";
+                    return "vec<string>";
                 }
                 default:
                 {
-                    return "FLAG";
+                    return "flag";
                 }
                 }
             }

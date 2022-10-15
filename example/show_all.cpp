@@ -67,7 +67,7 @@ int main(int argc, char const *argv[])
     arg_parser.setArgument({"e", "-e", "--ei", ArgsValType::INT, "this is a value arg"});
     arg_parser.setArgument({"f", "-f", "--fi", ArgsValType::FLOAT, "this is a value arg", false});
 
-    arg_parser.setArgument({"g", "-g", "--g", [](const std::string &key)
+    arg_parser.setArgument({"g", "-g", "--g", []()
                             { printf("action g!\n"); },
                             "this is a ACTION arg"});
 
