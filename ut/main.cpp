@@ -256,13 +256,13 @@ TEST_CASE("test for action success")
         "-a",
         "--boy"};
     JArgsParser jap(argc, argv, "desc", "copyright", "1.0.0");
-    jap.setArgument({"arg1", "-a", "--aha", [&](const std::string &)
+    jap.setArgument({"arg1", "-a", "--aha", [&]()
                      { flag1 = true; },
                      "haha"});
-    jap.setArgument({"arg2", "-b", "--boy", [&](const std::string &)
+    jap.setArgument({"arg2", "-b", "--boy", [&]()
                      { flag2 = true; },
                      "haha"});
-    jap.setArgument({"arg3", "-c", "--cry", [&](const std::string &)
+    jap.setArgument({"arg3", "-c", "--cry", [&]()
                      { flag3 = true; },
                      "haha"});
 
@@ -289,17 +289,43 @@ TEST_CASE("test for action success")
         "--yo",
         "--internet", "123"};
     JArgsParser jap(argc, argv, "desc", "copyright", "1.0.0");
-    jap.setArgument({"arg1", "-a", "--aha", [&](const std::string &)
+    jap.setArgument({"arg1", "-a", "--aha", [&]()
                      { flag1 = true; },
                      "haha"});
-    jap.setArgument({"arg2", "-b", "--boy", [&](const std::string &)
+    jap.setArgument({"arg2", "-b", "--boy", [&]()
                      { flag2 = true; },
                      "haha"});
-    jap.setArgument({"arg3", "-c", "--cry", [&](const std::string &)
+    jap.setArgument({"arg3", "-c", "--cry", [&]()
                      { flag3 = true; },
                      "haha"});
 
     CHECK(jap.parseArgs() == false);
+}
+
+// ------------------------------------------------
+// ------- unknown arguments test - end -----------
+
+// ------------------------------------------------
+// ------- no arguments test - start --------------
+TEST_CASE("test for action success")
+{
+    bool flag1{false}, flag2{false}, flag3{false};
+
+    int argc{1};
+    const char *argv[]{
+        "ut"};
+    JArgsParser jap(argc, argv, "desc", "copyright", "1.0.0");
+    jap.setArgument({"arg1", "-a", "--aha", [&]()
+                     { flag1 = true; },
+                     "haha"});
+    jap.setArgument({"arg2", "-b", "--boy", [&]()
+                     { flag2 = true; },
+                     "haha"});
+    jap.setArgument({"arg3", "-c", "--cry", [&]()
+                     { flag3 = true; },
+                     "haha"});
+
+    CHECK(jap.parseArgs() == true);
 }
 
 // ------------------------------------------------
