@@ -123,7 +123,7 @@ Congratulations! Now you can use `JArgsParser`!
 
 ## Want an advance support?
 
-Sorry, document is now ready now. If you want to get more information, please go to see `example/show_all.cpp` or `ut/main.cpp`.
+Sorry, document is not ready now. If you want to get more information, please go to see `example/show_all.cpp` or `ut/main.cpp`.
 
 Or, may be you can join us.
 
