@@ -126,10 +126,10 @@ if (false == arg_parser.parseArgs())
 
 可以访问[中文用户手册](doc/user_guide_zhCN.md)获取更多用法～
 
-## 是谁~给我了Star~
+## 是谁\~给我了Star\~
 
 [![Stargazers repo roster for @ZhengqiaoWang/JArgsParser](https://reporoster.com/stars/ZhengqiaoWang/JArgsParser)](https://github.com/ZhengqiaoWang/JArgsParser/stargazers)
 
-## 是谁~又点了Fork~
+## 是谁\~又点了Fork\~
 
 [![Forkers repo roster for @ZhengqiaoWang/JArgsParser](https://reporoster.com/forks/ZhengqiaoWang/JArgsParser)](https://github.com/ZhengqiaoWang/JArgsParser/network/members)
