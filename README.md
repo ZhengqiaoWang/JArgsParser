@@ -125,6 +125,8 @@ Congratulations! Now you can use `JArgsParser`!
 
 Sorry, document is not ready now. If you want to get more information, please go to see `example/show_all.cpp` or `ut/main.cpp`.
 
+** Now, we have [Chinese Document](doc/user_guide_zhCN.md) **
+
 Or, may be you can join us.
 
 ## Stargazers

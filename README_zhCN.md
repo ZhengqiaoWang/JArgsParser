@@ -124,4 +124,4 @@ if (false == arg_parser.parseArgs())
 
 ## 使用进阶
 
-目前文档我还没写，所以如果你等不急的话，可以参考`example/show_all.cpp`或者`ut/main.cpp`中的写法。我认为基本上把我设计到的场景都覆盖到了。
+可以访问[中文用户手册](doc/user_guide_zhCN.md)获取更多用法～
