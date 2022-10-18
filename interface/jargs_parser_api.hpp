@@ -551,9 +551,9 @@ namespace Joger
                             getArgsValTypeString(arg.second.arg_val_type).c_str());
                     }
                 }
-                printf("\n");
+                printf("\n\n");
                 printf("%s\n", m_description.c_str());
-                printf("Options and arguments (and corresponding environment variables):\n");
+                printf("Options and arguments:\n");
 
                 for (auto iter : m_arg_map)
                 {
