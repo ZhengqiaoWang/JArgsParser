@@ -1,8 +1,8 @@
 /**
  * @file jargs_parser_api.hpp
  * @brief A header-only c++ argument parser lib
- * @version 0.0.2
- * @date 2022-10-16
+ * @version 1.0.0
+ * @date 2022-10-26
  * 
  * @url https://github.com/ZhengqiaoWang/JArgsParser
  * 
@@ -270,9 +270,9 @@ namespace Joger
             ArgsDesc(const std::string &key,
                      const ArgsValType &arg_val_type,
                      const std::string description) : key(key),
+                                                      arg_type(ArgsType::POSITION),
                                                       arg_val_type(arg_val_type),
                                                       description(description),
-                                                      arg_type(ArgsType::POSITION),
                                                       required(true)
             {
                 arg_width = key.size();
@@ -290,12 +290,12 @@ namespace Joger
                      const std::string &short_name,
                      const std::string &full_name,
                      const std::string description) : key(key),
+                                                      arg_type(ArgsType::FLAG),
+                                                      arg_val_type(ArgsValType::NOTYPE),
                                                       short_name(short_name),
                                                       full_name(full_name),
                                                       description(description),
-                                                      arg_type(ArgsType::FLAG),
-                                                      required(false),
-                                                      arg_val_type(ArgsValType::NOTYPE)
+                                                      required(false)
             {
                 arg_width = short_name.size() + full_name.size() + 1;
             }
@@ -316,12 +316,12 @@ namespace Joger
                      const ArgsValType &arg_val_type,
                      const std::string description,
                      bool required = true) : key(key),
+                                             arg_type(ArgsType::VALUE),
+                                             arg_val_type(arg_val_type),
                                              short_name(short_name),
                                              full_name(full_name),
-                                             required(required),
                                              description(description),
-                                             arg_val_type(arg_val_type),
-                                             arg_type(ArgsType::VALUE)
+                                             required(required)
             {
                 arg_width = short_name.size() + full_name.size() + 1;
             }
@@ -340,13 +340,13 @@ namespace Joger
                      const std::string &full_name,
                      const std::function<void(void)> &action,
                      const std::string description) : key(key),
+                                                      arg_type(ArgsType::ACTION),
+                                                      arg_val_type(ArgsValType::NOTYPE),
                                                       short_name(short_name),
                                                       full_name(full_name),
                                                       description(description),
-                                                      action(action),
-                                                      arg_type(ArgsType::ACTION),
                                                       required(false),
-                                                      arg_val_type(ArgsValType::NOTYPE)
+                                                      action(action)
             {
                 arg_width = short_name.size() + full_name.size() + 1;
             }
@@ -356,15 +356,15 @@ namespace Joger
             }
 
         public:
-            std::string key;                  ///< primary key for get arg value
-            ArgsType arg_type;                ///< arg type
-            ArgsValType arg_val_type;         ///< arg value type
-            std::string short_name;           ///< short arg
-            std::string full_name;            ///< full(long) arg
-            std::string description;          ///< arg info
-            bool required{false};             ///< required flag
+            std::string key{""};                  ///< primary key for get arg value
+            ArgsType arg_type{ArgsType::POSITION};                ///< arg type
+            ArgsValType arg_val_type{ArgsValType::STRING};         ///< arg value type
+            std::string short_name{""};           ///< short arg
+            std::string full_name{""};            ///< full(long) arg
+            std::string description{""};          ///< arg info
+            bool required{true};             ///< required flag
             std::function<void(void)> action; ///< what function after action arg called
-            int arg_width{0};                 ///< store the width of both short_name and full_name to display help
+            size_t arg_width{0};                 ///< store the width of both short_name and full_name to display help
         };
 
         static bool isInterger(const std::string &in_val);
@@ -926,7 +926,6 @@ namespace Joger
             {
                 return false;
             }
-            auto &desc = getArgsDesc(key);
             auto &result_vec = m_key_val[key];
             if (result_vec.empty())
             {
@@ -1040,7 +1039,7 @@ namespace Joger
 
         static bool isInterger(const std::string &in_val)
         {
-            for (int i = 0; i < in_val.size(); ++i)
+            for (size_t i = 0; i < in_val.size(); ++i)
             {
                 if (in_val.at(i) == '-' && in_val.size() > 0)
                 {
@@ -1057,7 +1056,7 @@ namespace Joger
         static bool isFloat(const std::string &in_val)
         {
             int dot_cnt{0};
-            for (int i = 0; i < in_val.size(); ++i)
+            for (size_t i = 0; i < in_val.size(); ++i)
             {
                 if (in_val.at(i) == '-' && in_val.size() > 0)
                 {
@@ -1085,7 +1084,7 @@ namespace Joger
             std::vector<std::string> result;
             int start_pos{0};
 
-            for (int i = 0; i < in_val.size(); ++i)
+            for (size_t i = 0; i < in_val.size(); ++i)
             {
                 if (in_val.at(i) == spliter)
                 {
