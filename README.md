@@ -136,8 +136,3 @@ Or, may be you can join us.
 ## Forkers
 
 [![Forkers repo roster for @ZhengqiaoWang/JArgsParser](https://reporoster.com/forks/ZhengqiaoWang/JArgsParser)](https://github.com/ZhengqiaoWang/JArgsParser/network/members)
-
-## TODO
-
-- [x] UT 20221015
-- [ ] DOCS
