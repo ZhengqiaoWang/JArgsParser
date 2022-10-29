@@ -12,15 +12,15 @@ using namespace Joger::ArgsParser;
         printf("(" #TYPE ") " #KEY ": " #FMT "\n", b); \
     }
 
-#define GET_ARGS_STR(KEY, TYPE, FMT)                           \
-    {                                                          \
-        TYPE b{0};                                             \
-        if (false == arg_parser.getArgument(KEY, b))           \
-        {                                                      \
-            printf("parse failed\n");                          \
-            return -1;                                         \
-        }                                                      \
-        printf("(" #TYPE ") " #KEY ": " #FMT "\n", b.c_str()); \
+#define GET_ARGS_STR(KEY, TYPE)                            \
+    {                                                      \
+        TYPE b{0};                                         \
+        if (false == arg_parser.getArgument(KEY, b))       \
+        {                                                  \
+            printf("parse failed\n");                      \
+            return -1;                                     \
+        }                                                  \
+        printf("(" #TYPE ") " #KEY ":  %s \n", b.c_str()); \
     }
 
 #define GET_ARGS_VEC(KEY, TYPE, FMT)                 \
@@ -39,7 +39,7 @@ using namespace Joger::ArgsParser;
         printf("\n");                                \
     }
 
-#define GET_ARGS_VEC_STR(KEY, TYPE, FMT)             \
+#define GET_ARGS_VEC_STR(KEY, TYPE)                  \
     {                                                \
         std::vector<TYPE> b;                         \
         if (false == arg_parser.getArgument(KEY, b)) \
@@ -50,7 +50,7 @@ using namespace Joger::ArgsParser;
         printf("(" #TYPE ") " #KEY ": ");            \
         for (auto &item : b)                         \
         {                                            \
-            printf(#FMT " ", item.c_str());          \
+            printf("%s ", item.c_str());             \
         }                                            \
         printf("\n");                                \
     }
@@ -81,13 +81,13 @@ int main(int argc, char const *argv[])
         return -1;
     }
     GET_ARGS("a", int, "%d");
-    GET_ARGS("a", long, "%d");
-    GET_ARGS("a", unsigned int, "%d");
-    GET_ARGS("a", unsigned long, "%d");
+    GET_ARGS("a", long, "%ld");
+    GET_ARGS("a", unsigned int, "%u");
+    GET_ARGS("a", unsigned long, "%lu");
     GET_ARGS("b", int, "%d");
     GET_ARGS("b", float, "%f");
     GET_ARGS("b", double, "%f");
-    GET_ARGS_STR("c", std::string, "%s");
+    GET_ARGS_STR("c", std::string);
     GET_ARGS("d", bool, "%d");
     GET_ARGS("e", int, "%d");
     GET_ARGS("f", float, "%f");
@@ -95,6 +95,6 @@ int main(int argc, char const *argv[])
     GET_ARGS_VEC("i", float, "%f");
     GET_ARGS_VEC("i", double, "%f");
 
-    GET_ARGS_VEC_STR("j", std::string, "%s");
+    GET_ARGS_VEC_STR("j", std::string);
     return 0;
 }
