@@ -1,8 +1,8 @@
 /**
  * @file jargs_parser_api.hpp
  * @brief A header-only c++ argument parser lib
- * @version 1.0.0
- * @date 2022-10-26
+ * @version 1.0.2
+ * @date 2022-11-01
  * 
  * @url https://github.com/ZhengqiaoWang/JArgsParser
  * 
@@ -239,22 +239,23 @@ namespace Joger
                 {
                 case ArgsType::POSITION:
                 {
-                    m_key_func[key] = std::bind(&JArgsParser::posArgParser, this, key, args_desc);
+                    m_key_func[0][key] = std::bind(&JArgsParser::posArgParser, this, key, args_desc);
+                    m_pos_key_priority_vec.emplace_back(key);
                     break;
                 }
                 case ArgsType::FLAG:
                 {
-                    m_key_func[key] = std::bind(&JArgsParser::flagArgParser, this, key, args_desc);
+                    m_key_func[1][key] = std::bind(&JArgsParser::flagArgParser, this, key, args_desc);
                     break;
                 }
                 case ArgsType::VALUE:
                 {
-                    m_key_func[key] = std::bind(&JArgsParser::valArgParser, this, key, args_desc);
+                    m_key_func[1][key] = std::bind(&JArgsParser::valArgParser, this, key, args_desc);
                     break;
                 }
                 case ArgsType::ACTION:
                 {
-                    m_key_func[key] = std::bind(&JArgsParser::actArgParser, this, key, args_desc);
+                    m_key_func[1][key] = std::bind(&JArgsParser::actArgParser, this, key, args_desc);
                     break;
                 }
 
@@ -304,9 +305,18 @@ namespace Joger
                     exit(0);
                 }
 
-                for (auto iter : m_key_func)
+                for (auto &key : m_pos_key_priority_vec)
                 {
-                    if (false == iter.second())
+                    if (false == m_key_func[0][key]())
+                    {
+                        showHelp();
+                        return false;
+                    }
+                }
+
+                for (auto &arg_pair : m_key_func[1])
+                {
+                    if (false == arg_pair.second())
                     {
                         showHelp();
                         return false;
@@ -586,7 +596,8 @@ namespace Joger
             std::vector<std::string> m_argv_vec; ///< 参数存放
 
             std::map<ArgsType, std::map<std::string, ArgsDesc>, std::less<ArgsType>> m_arg_map;
-            std::map<std::string, std::function<bool(void)>> m_key_func;
+            std::array<std::map<std::string, std::function<bool(void)>>, 2> m_key_func;
+            std::vector<std::string> m_pos_key_priority_vec;
             std::unordered_map<std::string, std::vector<std::string>> m_key_val;
 
         private:
